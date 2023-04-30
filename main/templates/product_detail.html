@@ -40,8 +40,10 @@
 			  	<input type="hidden" class="product-image-{{data.id}}" value="{{data.productattribute_set.first.image}}" />
 		          <input type="hidden" class="product-id-{{data.id}}" value="{{data.id}}" />
 		          <input type="hidden" class="product-title-{{data.id}}" value="{{data.title}}" />
+				  {% if user.is_authenticated %}
 			    <a href="/order/{{data.id}}" class="btn btn-primary btn-sm" data-index="{{data.id}}" type="button" id="Order"><i class="fa fa-shopping-cart"></i> Заказать</a>
-			  </div>
+				{% endif %}
+			</div>
 			</div>
 		</div>
 	</div>
@@ -70,7 +72,7 @@
 			<h3 class="my-3">Отзывы - <span class="avg-rating">{{avg_reviews.avg_rating}}</span>/5 <i class="fa fa-star text-warning"></i>
 				{% if user.is_authenticated %}
 				{% if canAdd %}
-				<button data-toggle="modal" data-target="#productReview" type="button" class="btn btn-warning btn-sm float-right reviewBtn">Add Review</button>
+				<button data-toggle="modal" data-target="#productReview" type="button" class="btn btn-warning btn-sm float-right reviewBtn">Добавить отзыв</button>
 				{% endif %}
 				{% endif %}
 			</h3>
@@ -80,7 +82,7 @@
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Add Product Review</h5>
+	        <h5 class="modal-title" id="exampleModalLabel">Добавить отзыв</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
@@ -92,8 +94,8 @@
 		      		{{reviewForm.as_table}}
 		      		<tr>
 		      			<td colspan="2">
-		      				<button type="submit" class="btn btn-primary">Submit</button>
-		      				<input type="reset" class="btn btn-dark" value="Reset" id="reset" />
+		      				<button type="submit" class="btn btn-primary">Оставить отзыв</button>
+		      				<input type="reset" class="btn btn-dark" value="Сброс" id="reset" />
 		      			</td>
 		      		</tr>
 		      	</table>
@@ -124,7 +126,7 @@
 						<hr />
 						{% endfor %}
 					{% else %}
-						<p class="no-data">Add First Review</p>
+						<p class="no-data">Добавить первый отзыв</p>
 					{% endif %}
 				</div>
 			</div>

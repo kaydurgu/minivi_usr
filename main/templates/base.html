@@ -41,22 +41,27 @@
 		      <li class="nav-item">
 		        <a class="nav-link text-white" href="{% url 'brand-list' %}">Бренды</a>
 		      </li>
-			{% if user.is_authenticated %}
+			  {% if user.is_authenticated %}	
+			  <li class="nav-item">
+		        <a class="nav-link text-white" href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> Корзина (<span class="cart-list">{{request.user.wishlist_set.count}}</span>)</a>
+		      </li>
+			  {% endif %}
 		      <li class="nav-item dropdown">
 		        <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		          <i class="fa fa-user"></i> Мой Аккаунт
+					{% if user.is_authenticated %}
+					<i class="fa fa-user"></i> {{user.username}}
+					{% else %}
+					<i class="fa fa-user"></i> Аккаунт
+					{% endif %}
 		        </a>
 		        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-		        {% if user.is_authenticated %}
+		          {% if user.is_authenticated %}
 		        	<a class="dropdown-item" href="{% url 'my_dashboard' %}">Панель управления</a>
 		        	<a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
 	        	{% else %}
-	        		<a class="dropdown-item" href="{% url 'login' %}">Login</a>
-		          <a class="dropdown-item" href="{% url 'signup' %}">Signup</a>
+	        		<a class="dropdown-item" href="{% url 'login' %}">Войти</a>
+		          <a class="dropdown-item" href="{% url 'signup' %}">Регистрация</a>
 		        {% endif %}
-		        </div>
-		      </li>
-			  {% endif %}
 		    </ul>
 		  </div>
 		</div>

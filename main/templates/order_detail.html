@@ -12,16 +12,18 @@
             <th scope="col">Имя</th>
             <th scope="col">Адрес</th>
             <th scope="col">Номер Телефона</th>
+            <th scope="col">Комментарий</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <th scope="row">1</th>
-            <a href="/product/{{data.slug}}"><td>{{data.product}}</a></td>
-            <td>{{data.quan}}</td>
-            <td>{{data.customer_name}}</td>
+            <td><a href="/product/{{data.product.slug}}/{{data.product.id}}">{{data.product}}</a></td>
+            <td>1</td>
+            <td>{{data.name}}</td>
             <td>{{data.address}}</td>
             <td>{{data.phone_number}}</td>
+            <td>{{data.comment}}</td>
           </tr>
         </tbody>
       </table>

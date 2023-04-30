@@ -17,7 +17,8 @@ urlpatterns=[
     path('load-more-data',views.load_more_data,name='load_more_data'),
     path('accounts/signup',views.signup,name='signup'),
     path('save-review/<int:pid>',views.save_review, name='save-review'),
-    
+    path('add-to-cart',views.add_to_cart,name='add_to_cart'),
+    path('cart',views.cart_list,name='cart'),
     path('order/<int:id>',views.make_order ,name='make_order'),
     path('order_details/<int:id>',views.order_details ,name='order_details'),
 

@@ -14,20 +14,22 @@
 					<thead>
 						<tr>
 							<th>Товар</th>
-							<th>Количество</th>
+							<th>Цена</th>
 							<th>Имя</th>
 							<th>Адрес</th>
 							<th>Номер</th>
+							<th>Комментарии</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for order in orders %}
 						<tr>
 							<td><a href="/product/{{order.product.slug}}/{{order.product.id}}">{{order.product.title}}</a></td>
-							<td>{{order.quan}}</td>
-							<td>{{order.customer_name}}</td>
-							<td>{{order.address}}</td>
-							<td>{{order.phone_number}}</td>
+							<td>{{order.product.productattribute_set.first.price}}</td>
+							<td>{{order.user}}</td>
+							<td>{{order.user.useraddressbook_set.first.address}}</td>
+							<td>{{order.user.useraddressbook_set.first.mobile}}</td>
+							<td>{{order.comment}}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

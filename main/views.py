@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import JsonResponse,HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse,HttpResponse
 from .models import Banner,Category,Brand,Product,ProductAttribute,CartOrder,CartOrderItems,ProductReview,Wishlist,UserAddressBook
 from django.db.models import Max,Min,Count,Avg
 from django.db.models.functions import ExtractMonth
@@ -12,7 +12,12 @@ from .models import OrderAnon
 def home(request):
 	banners=Banner.objects.all().order_by('-id')
 	data=Product.objects.filter(is_featured=True).order_by('-id')
-	return render(request,'index.html',{'data':data,'banners':banners})
+	if not request.user.is_authenticated:
+		return render(request,'index.html',{'data':data,'banners':banners})
+	else:
+		k = Wishlist.objects.filter(user = request.user)
+		print(len(k))
+		return render(request,'index.html',{'data':data,'banners':banners, 'korzina':len(k)})
 
 # Category
 def category_list(request):
@@ -88,20 +93,36 @@ def search(request):
 	return render(request,'search.html',{'data':data})
 
 def make_order(request,id):
-	product=Product.objects.get(id=id)
+	try:
+		product=Product.objects.get(id=id)
+		productatt = ProductAttribute.objects.get(product = product)
+	except Product.DoesNotExist:
+		product=''
+	return render(request,'make_order.html', {'data':product, 'size':productatt.size })
 
-	return render(request,'make_order.html', {'data':product })
 def order_details(request,id):
 	neworder = OrderAnon()
+	neworder.user = request.user
 	neworder.product = Product.objects.get(id = id)
-	neworder.customer_name = request.POST['name']
-	neworder.phone_number  = request.POST['phone']
-	neworder.quan =  request.POST['qunatity']
-	neworder.address = request.POST['address']
+	try:
+		neworder.comment = request.POST['comment']
+	except:
+		neworder.comment = ''
 	neworder.save()
-	product=Product.objects.get(id=id)
-	print(neworder)
-	return render(request,'order_detail.html', {'data':neworder})
+	try:
+		dates=UserAddressBook.objects.get(user=request.user)
+		data = {
+		'user':neworder.user,
+		'product':neworder.product,
+		'address':dates.address,
+		'phone_number':dates.mobile,
+		'comment':neworder.comment,
+		} 
+		return render(request,'order_detail.html', {'data':data})
+	except UserAddressBook.DoesNotExist:
+		
+		return save_address(request)
+
 
 # Filter Data
 def filter_data(request):
@@ -144,59 +165,35 @@ def add_to_cart(request):
 		'qty':request.GET['qty'],
 		'price':request.GET['price'],
 	}
-	if 'cartdata' in request.session:
-		if str(request.GET['id']) in request.session['cartdata']:
-			cart_data=request.session['cartdata']
-			cart_data[str(request.GET['id'])]['qty']=int(cart_p[str(request.GET['id'])]['qty'])
-			cart_data.update(cart_data)
-			request.session['cartdata']=cart_data
-		else:
-			cart_data=request.session['cartdata']
-			cart_data.update(cart_p)
-			request.session['cartdata']=cart_data
-	else:
-		request.session['cartdata']=cart_p
+	print (cart_p)
+	print('Zhanbolot')
+
 	return JsonResponse({'data':request.session['cartdata'],'totalitems':len(request.session['cartdata'])})
 
 # Cart List Page
+@login_required
 def cart_list(request):
 	total_amt=0
-	if 'cartdata' in request.session:
-		for p_id,item in request.session['cartdata'].items():
-			total_amt+=int(item['qty'])*float(item['price'])
-		return render(request, 'cart.html',{'cart_data':request.session['cartdata'],'totalitems':len(request.session['cartdata']),'total_amt':total_amt})
+	print ('Zhanbolot1')
+	allmywishlist = Wishlist.objects.filter(user = request.user)
+	print (allmywishlist)
+	cart_data = {}
+	total_amt = 0 
+	if allmywishlist:
+		for x, y in enumerate(allmywishlist):
+			product = ProductAttribute.objects.get(product = y.product)
+			cart_data[y.product.id]={
+			'image':product.image,
+			'title':y.product.title,
+			'qty':1,
+			'price':product.price,
+			}
+			total_amt+=product.price
+
+		return render(request, 'cart.html',{'cart_data':cart_data,'totalitems':len(cart_data),'total_amt':total_amt})
 	else:
 		return render(request, 'cart.html',{'cart_data':'','totalitems':0,'total_amt':total_amt})
 
-
-# Delete Cart Item
-def delete_cart_item(request):
-	p_id=str(request.GET['id'])
-	if 'cartdata' in request.session:
-		if p_id in request.session['cartdata']:
-			cart_data=request.session['cartdata']
-			del request.session['cartdata'][p_id]
-			request.session['cartdata']=cart_data
-	total_amt=0
-	for p_id,item in request.session['cartdata'].items():
-		total_amt+=int(item['qty'])*float(item['price'])
-	t=render_to_string('ajax/cart-list.html',{'cart_data':request.session['cartdata'],'totalitems':len(request.session['cartdata']),'total_amt':total_amt})
-	return JsonResponse({'data':t,'totalitems':len(request.session['cartdata'])})
-
-# Delete Cart Item
-def update_cart_item(request):
-	p_id=str(request.GET['id'])
-	p_qty=request.GET['qty']
-	if 'cartdata' in request.session:
-		if p_id in request.session['cartdata']:
-			cart_data=request.session['cartdata']
-			cart_data[str(request.GET['id'])]['qty']=p_qty
-			request.session['cartdata']=cart_data
-	total_amt=0
-	for p_id,item in request.session['cartdata'].items():
-		total_amt+=int(item['qty'])*float(item['price'])
-	t=render_to_string('ajax/cart-list.html',{'cart_data':request.session['cartdata'],'totalitems':len(request.session['cartdata']),'total_amt':total_amt})
-	return JsonResponse({'data':t,'totalitems':len(request.session['cartdata'])})
 
 # Signup Form
 def signup(request):
@@ -261,7 +258,7 @@ def save_review(request,pid):
 	avg_reviews=ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))
 	# End
 
-	return JsonResponse({'bool':True,'data':data,'avg_reviews':avg_reviews})
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # User Dashboard
 import calendar
@@ -275,11 +272,17 @@ def my_dashboard(request):
 	return render(request, 'user/dashboard.html',{'monthNumber':monthNumber,'totalOrders':totalOrders})
 
 # My Orders
+@login_required
 def my_orders(request):
-	orders=OrderAnon.objects.all()
+	if request.user.is_staff:
+		orders=OrderAnon.objects.all().order_by('-id')
+		print('Staffs')
+	else:
+		orders=OrderAnon.objects.filter(user=request.user)
 	return render(request, 'user/orders.html',{'orders':orders})
 
 # Order Detail
+
 def my_order_items(request,id):
 	order=CartOrder.objects.get(pk=id)
 	orderitems=CartOrderItems.objects.filter(order=order).order_by('-id')

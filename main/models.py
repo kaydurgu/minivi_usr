@@ -132,16 +132,13 @@ class CartOrderItems(models.Model):
         return mark_safe('<img src="/media/%s" width="50" height="50" />' % (self.image))
 
 class OrderAnon(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    customer_name = models.CharField(max_length=15)
-    quan= models.IntegerField()
-    phone_number = models.CharField(max_length=12)
-    address = models.CharField(max_length=30)
+    comment = models.CharField(blank=True,max_length=500)
     class Meta:
         verbose_name_plural='9.All Orders'
-
     def __str__(self) -> str:
-        return self.customer_name + ' ' + self.product.title
+        return str(self.user) + ' ' + str(self.product.title)
 # Product Review 
 RATING=(
     (1,'1'),

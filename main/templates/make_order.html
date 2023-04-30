@@ -23,9 +23,7 @@
 				<tr>
 					<th>Размер</th>
 					<td>
-						{% for size in sizes %}
-						<button data-price="{{size.price}}" class="btn btn-outline-primary btn-sm choose-size color{{size.color__id}}">{{size.size__title}}</button>
-						{% endfor %}
+						<h6>{{size}}</h6>
 					</td>
 				</tr>
 				<tr>
@@ -45,25 +43,11 @@
  
 <form action = "/order_details/{{data.id}}" method = "post">
     {% csrf_token %}
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputname">Имя</label>
-        <input type="text" id="name"  name = 'name' class="form-control" placeholder="Имя">
-      </div>
-      <div class="form-group col-md-2">
-        <label for="qunatity">Количество</label>
-        <input type="text" id="qunatity"  name = 'qunatity' class="form-control" placeholder="Количество">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputAddress2">Адрес</label>
-      <input type="text" id="address" name ='address' class="form-control" id="inputAddress2" placeholder="Адрес">
-    </div>
-    <div class="form-group">
-        <label for="inputAddress2">Номер телефона</label>
-        <input type="tel" id="phone" name = 'phone' id="typePhone" placeholder="Номер телефона" class="form-control" />
-    </div>
-    <input type="submit" class="btn btn-primary"> Отправить</a>
+	<div class="form-group">
+		<label for="comment">Комментарий</label>
+		<textarea class="form-control" name = 'comment' id="comment" rows="3" placeholder="Комментарий"></textarea>
+	  </div>
+    <input type="submit" value="Заказать" class="btn btn-primary"></a>
   </form>
 </div>
 {% endblock %}

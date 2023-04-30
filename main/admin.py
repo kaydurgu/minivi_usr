@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import OrderAnon,Banner,Category,Brand,Color,Size,Product,ProductAttribute,CartOrder,CartOrderItems,ProductReview,Wishlist,UserAddressBook
+from .models import Banner, OrderAnon,Category,Brand,Color,Size,Product,ProductAttribute,CartOrder,CartOrderItems,ProductReview,Wishlist,UserAddressBook
 
 # admin.site.register(Banner)
 admin.site.register(Brand)
 admin.site.register(Size)
-admin.site.register(OrderAnon)
+
 
 class BannerAdmin(admin.ModelAdmin):
 	list_display=('alt_text','image_tag')
@@ -27,3 +27,9 @@ admin.site.register(Product,ProductAdmin)
 class ProductAttributeAdmin(admin.ModelAdmin):
     list_display=('id','image_tag','product','price','color','size')
 admin.site.register(ProductAttribute,ProductAttributeAdmin)
+
+class ProductReviewAdmin(admin.ModelAdmin):
+	list_display=('user','product','review_text','get_review_rating')
+admin.site.register(ProductReview,ProductReviewAdmin)
+admin.site.register(OrderAnon)
+admin.site.register(Wishlist)

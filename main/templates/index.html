@@ -43,17 +43,15 @@
 			  <a href="/product/{{product.slug}}/{{product.id}}"><img width="277px" height="350px" src="/media/{{product.productattribute_set.first.image}}" class="card-img-top" alt="{{product.title}}"></a>
 			  <div class="card-body">
 			    <h5 class="card-text"><a href="/product/{{product.slug}}/{{product.id}}">{{product.title}}</a></h5>
-          <h6><span class="product-price-{{product.id}}">{{product.productattribute_set.first.price}} Сом</span></h6>
+          <h6><span class="product-price-{{product.id}}">{{product.productattribute_set.first.price}}</span> Сом</h6>
 			  </div>
 			  <div class="card-footer">
-          {{product.productattribute_set.first.color.title}}
           <input type="hidden" value="1" class="form-control product-qty-{{product.id}}" id="productQty" />
           <input type="hidden" class="product-image-{{product.id}}" value="{{product.productattribute_set.first.image}}" />
           <input type="hidden" class="product-id-{{product.id}}" value="{{product.id}}" />
           <input type="hidden" class="product-title-{{product.id}}" value="{{product.title}}" />
 
-			  	<a href="/order/{{product.id}}"> <button class="btn btn-sm btn-primary add-to-cart" data-index="{{product.id}}"><i class="fa fa-shopping-cart"></i></button></a>
-			  	<button class="btn btn-sm btn-danger add-wishlist" data-product="{{product.id}}"><i class="fa fa-heart"></i></button>
+			  	<a href="{% url 'cart' %}"> <button class="btn btn-sm btn-primary add-wishlist" data-product="{{product.id}}"><i class="fa fa-shopping-cart"></i></button></a>
 
 			  	<span class="float-right">
 			  		4.5/5
@@ -64,6 +62,6 @@
 		</div>
     {% endfor %}
 	</div>
-	<p class="my-4 text-center"><a href="{% url 'product-list' %}" class="btn btn-dark btn-sm">All Products <i class="fa fa-long-arrow-alt-right"></i></a></p>
+	<p class="my-4 text-center"><a href="{% url 'product-list' %}" class="btn btn-dark btn-sm">Все Продукты <i class="fa fa-long-arrow-alt-right"></i></a></p>
 </main>
 {% endblock %}
