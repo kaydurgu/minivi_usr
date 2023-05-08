@@ -9,6 +9,8 @@ from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
 from .models import OrderAnon
 # Home Page
+
+
 def home(request):
 	banners=Banner.objects.all().order_by('-id')
 	data=Product.objects.filter(is_featured=True).order_by('-id')
@@ -81,7 +83,7 @@ def product_detail(request,slug,id):
 	# End
 
 	# Fetch avg rating for reviews
-	avg_reviews=ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))
+	avg_reviews=5
 	# End
 
 	return render(request, 'product_detail.html',{'data':product,'related':related_products,'colors':colors,'sizes':sizes,'reviewForm':reviewForm,'canAdd':canAdd,'reviews':reviews,'avg_reviews':avg_reviews})
