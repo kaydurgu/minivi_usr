@@ -1,6 +1,8 @@
 # MiniVi
 
-MiniVi Online Clothes Shop is a Django web application that allows administrators to add new goods and manage existing ones. Users can browse through the available products, and send their purchase requests.
+MiniVi Online Clothes Shop is a Django-based web application designed for the purpose of enabling administrators to seamlessly add new merchandise and oversee existing products. Additionally, users are afforded the opportunity to peruse the catalog of available items and submit their purchase requests.
+
+This project is being developed as an integral component of the Backend Development course offered at Ala-Too University. The collaborative effort is being undertaken by team members **Bakytbek uulu Zhanbolot**, under the guidance of Professor **Zhavlon Khamidov**.
 
 # Features
 
