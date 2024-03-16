@@ -1,4 +1,8 @@
 # MiniVi
+[Youtube](https://www.youtube.com/watch?v=IMR23CRv7Ak)
+
+
+<br>
 
 MiniVi Online Clothes Shop is a Django-based web application designed for the purpose of enabling administrators to seamlessly add new merchandise and oversee existing products. Additionally, users are afforded the opportunity to peruse the catalog of available items and submit their purchase requests.
 
